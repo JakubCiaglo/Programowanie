@@ -184,7 +184,7 @@ if __name__ == '__main__':
     print('\nv2 =', v2)
 
     v3 = v1 + v2
-    print('\nv3 = v1-v2=', v3)
+    print('\nv3 = v1+v2=', v3)
 
     v4 = v1 - v2
     print('\nv4 = v1-v2=', v4)
