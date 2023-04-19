@@ -4,22 +4,22 @@ def zamiana(nazwa_pliku):
     Parametry:
     nazwa_pliku: nazwa pliku, który chcemy zmodyfikować'''
     try:
-        with open(nazwa_pliku, 'r') as plik:
+        with open(nazwa_pliku, 'rb') as plik:
             zawartosc = plik.read()
         
         # Sprawdzenie typu znaków końca linii w pliku
-        if '\r\n' in zawartosc:
+        if b'\r\n' in zawartosc:
             # Zamiana z Windowsowych na Unixowe
-            zawartosc = zawartosc.replace('\r\n', '\n')
-        elif '\n' in zawartosc:
+            zawartosc = zawartosc.replace(b'\r\n', b'\n')
+        elif b'\n' in zawartosc:
             # Zamiana z Unixowych na Windowsowe
-            zawartosc = zawartosc.replace('\n', '\r\n')
+            zawartosc = zawartosc.replace(b'\n', b'\r\n')
         else:
             print("Plik nie zawiera znaków końca linii.")
             return
         
         # Zapisanie nowej zawartości do pliku
-        with open(nazwa_pliku, 'w') as plik:
+        with open(nazwa_pliku, 'wb') as plik:
             plik.write(zawartosc)
         
         print("Zamiana znaków końca linii w pliku zakończona powodzeniem.")
