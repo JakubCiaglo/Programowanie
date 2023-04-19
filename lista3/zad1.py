@@ -7,8 +7,8 @@ def backup_files(paths, extensions):
     Funkcja tworząca backup plików zmodyfikowanych w ostatnich 3 dniach
     
     Parametry:
-    paths: ścieżki do katalogów których pliki mają być zapisane
-    extensions: rozszerzenia plików, które chcemy zapisać
+    paths: lista zawierająca ścieżki do katalogów których pliki mają być zapisane
+    extensions: lista rozszerzenia plików, które chcemy zapisać
     '''
     backup_dir = os.path.join(os.getcwd(), 'Backup', f'copy-{datetime.date.today()}')
     os.makedirs(backup_dir, exist_ok=True)
@@ -27,4 +27,4 @@ def backup_files(paths, extensions):
                                 shutil.copy(file_path, backup_path)
     print('Stworzono backup na ścieżce ',backup_dir)
     
-backup_files(["C:\\Users\\HP\\Desktop\\testowy1","C:\\Users\\HP\\Desktop\\testowy2"], ['txt','docx'])
+backup_files(["C:\\Users\\lab\\Desktop\\testowy1","C:\\Users\\lab\\Desktop\\testowy2"], ['txt','docx'])
