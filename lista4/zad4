@@ -1,0 +1,26 @@
+import networkx as nx
+import imageio.v2 as imageio
+import random
+import matplotlib.pyplot as plt
+
+G = nx.gnm_random_graph(10, 15)
+pos = nx.spring_layout(G)
+wierzcholek = random.choice(list(G.nodes()))
+nx.draw_networkx_nodes(G, pos, nodelist=[wierzcholek], node_color='red')
+
+liczba_kroków = 10
+
+for i in range(liczba_kroków):
+    # Wylosowanie losowego węzła, do którego agent się przemieści
+    wierzcholek=random.choice(list(G.neighbors(wierzcholek)))
+    # Rysowanie obecnego stanu grafu z położeniem agenta
+    nx.draw(G, pos, with_labels=True)
+    nx.draw_networkx_nodes(G, pos, nodelist=[wierzcholek], node_color='red')
+    plt.savefig(f"krok_{i}.png")
+    plt.clf()
+    
+images = []
+for i in range(liczba_kroków):
+    nazwa=f"krok_{i}.png"
+    images.append(imageio.imread(nazwa))
+imageio.mimsave("błędzenie.gif", images, duration=1000)
