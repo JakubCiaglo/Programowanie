@@ -1,0 +1,43 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+import sys 
+
+def seir_model(t, y, N, beta, sigma, gamma):
+    S, E, I, R = y
+    dSdt = -beta * S * I / N
+    dEdt = beta * S * I / N - sigma * E
+    dIdt = sigma * E - gamma * I
+    dRdt = gamma * I
+    return dSdt, dEdt, dIdt, dRdt
+
+N = float(sys.argv[1])   # liczba ludności całkowitej
+S0 = float(sys.argv[2])  # liczba ludzi podatnych na zakażenie na początku
+E0 = float(sys.argv[3])  # liczba ludzi zakażonych, ale jeszcze niezarażających innych na początku
+I0 = float(sys.argv[4])  # liczba ludzi zarażonych i zarażających innych na początku
+R0 = float(sys.argv[5])  # liczba ludzi, którzy wyzdrowieli i nie mogą już zarazić się ani zarażać innych na początku
+beta = float(sys.argv[6])   # współczynnik transmisji (liczba kontaktów na jednostkę czasu)
+sigma = float(sys.argv[7])  # współczynnik zapadalności (średni czas, przez jaki osoba zakażona, ale jeszcze niezarażająca innych, pozostaje zakażona)
+gamma = float(sys.argv[8])  # współczynnik wyzdrowienia (średni czas, przez jaki zakażona osoba jest zaraźliwa)
+
+
+y0 = S0, E0, I0, R0
+
+t_start = 0
+t_end = 200
+t_step = 0.1
+t_span = np.arange(t_start, t_end, t_step)
+
+solution = solve_ivp(seir_model, (t_start, t_end), y0, args=(N, beta, sigma, gamma), t_eval=t_span)
+
+fig, ax = plt.subplots(figsize=(10, 6))
+plt.plot(solution.t, solution.y[0], 'b', label='Podatni na zakażenie')
+plt.plot(solution.t, solution.y[1], 'y', label='Zakażeni, ale jeszcze niezarażający innych')
+plt.plot(solution.t, solution.y[2], 'r', label='Zakażeni i zarażający innych')
+plt.plot(solution.t, solution.y[3], 'g', label='Wyzdrowiali')
+plt.xlabel('Czas')
+plt.ylabel('Liczba ludzi')
+plt.title('Model SEIR1')
+ax.set_ylim([0, N])
+ax.legend()
+plt.show()
