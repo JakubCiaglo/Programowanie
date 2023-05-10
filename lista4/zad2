@@ -13,6 +13,18 @@ def seir_model(t, y, N, beta, sigma, gamma):
     return dSdt, dEdt, dIdt, dRdt
 
 def main(args):
+    '''Funkcja wykorzystująca argumenty wpisane w lini komend, do użycia w modelu SEIR
+    
+    Argumenty:
+    -N: liczba ludności całkowitej
+    -S0: liczba ludzi podatnych na zakażenie na początku
+    -I0: liczba ludzi zakażonych, ale jeszcze niezarażających innych na początku
+    -R0: liczba ludzi, którzy wyzdrowieli i nie mogą już zarazić się ani zarażać innych na początku
+    -beta: współczynnik transmisji (liczba kontaktów na jednostkę czasu)
+    -sigma: współczynnik zapadalności (średni czas, przez jaki osoba zakażona, ale jeszcze niezarażająca innych, pozostaje zakażona)
+    -gamma: współczynnik wyzdrowienia (średni czas, przez jaki zakażona osoba jest zaraźliwa)
+    
+    '''
     if args.S0 is None:
         args.S0 = args.N - args.E0 - args.I0 - args.R0
     y0 = args.S0, args.E0, args.I0, args.R0
