@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 G = nx.gnm_random_graph(10, 15)
 pos = nx.spring_layout(G)
 wierzcholek = random.choice(list(G.nodes()))
-nx.draw_networkx_nodes(G, pos, nodelist=[wierzcholek], node_color='red')
 
 liczba_kroków = 10
 
