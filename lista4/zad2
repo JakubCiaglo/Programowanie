@@ -25,7 +25,27 @@ def main(args):
     -gamma: współczynnik wyzdrowienia (średni czas, przez jaki zakażona osoba jest zaraźliwa)
     
     '''
-    if args.S0 is None:
+    if args.N is not None and args.S0 is not None and args.E0 is not None:
+        if args.N != (args.S0 + args.E0 + args.I0 + args.R0):
+            raise ValueError('Dane nie są zgodne!')
+    elif args.N is not None and args.S0 is None and args.E0 is None:
+        args.E0 = 1
+        args.S0 = args.N - args.E0 - args.I0 - args.R0
+    elif args.N is not None and args.S0 is not None and args.E0 is None:
+        args.E0 = args.N - args.S0 - args.I0 - args.R0
+    elif args.N is not None and args.S0 is None and args.E0 is not None:
+        args.S0 = args.N - args.E0 - args.I0 - args.R0
+    elif args.N is None and args.S0 is not None and args.E0 is not None:
+        args.N = (args.S0 + args.E0 + args.I0 + args.R0)
+    elif args.N is None and args.S0 is None and args.E0 is not None:
+        args.N=1000
+        args.S0 = args.N - args.E0 - args.I0 - args.R0
+    elif args.N is None and args.S0 is not None and args.E0 is None:
+        args.N=1000
+        args.E0 = args.N - args.S0 - args.I0 - args.R0
+    elif args.N is None and args.S0 is None and args.E0 is None:
+        args.N=1000
+        args.E0 = 1
         args.S0 = args.N - args.E0 - args.I0 - args.R0
     y0 = args.S0, args.E0, args.I0, args.R0
 
