@@ -69,9 +69,9 @@ def main(args):
     plt.show()
 
 parser = argparse.ArgumentParser(description='Model SEIR1')
-parser.add_argument('-N', type=float, default=1000, help='liczba ludności całkowitej')
+parser.add_argument('-N', type=float, default=None, help='liczba ludności całkowitej')
 parser.add_argument('-S0', type=float, default=None, help='liczba ludzi podatnych na zakażenie na początku')
-parser.add_argument('-E0', type=float, default=0, help='liczba ludzi zakażonych, ale jeszcze niezarażających innych na początku')
+parser.add_argument('-E0', type=float, default=None, help='liczba ludzi zakażonych, ale jeszcze niezarażających innych na początku')
 parser.add_argument('-I0', type=float, default=1, help='liczba ludzi zarażonych i zarażających innych na początku')
 parser.add_argument('-R0', type=float, default=0, help='liczba ludzi, którzy wyzdrowieli i nie mogą już zarazić się ani zarażać innych na początku')
 parser.add_argument('-beta', type=float, default=1.34, help='współczynnik transmisji (liczba kontaktów na jednostkę czasu)')
