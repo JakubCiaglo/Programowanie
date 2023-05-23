@@ -1,1 +1,94 @@
+import requests
+import pickle
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
 
+class KalkulatorWalut:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Konwerter Walut")
+
+        self.waluta_zrodlowa = tk.StringVar()
+        self.waluta_docelowa = tk.StringVar()
+        self.kwota = tk.DoubleVar()
+        self.wynik = tk.StringVar()
+        
+        self.kursy = self.pobierz_kursy_walut()
+        if self.kursy is None:
+            messagebox.showerror("Błąd", "Brak danych o kursach. Sprawdź połączenie internetowe.")
+            self.root.quit()
+        self.utworz_interfejs()
+
+    def pobierz_kursy_walut(self):
+        try:
+            response = requests.get("https://api.nbp.pl/api/exchangerates/tables/A/")
+            kursy = response.json()[0]['rates']
+            kursy_słownik = {kurs['code']: kurs['mid'] for kurs in kursy}
+            kursy_słownik['PLN'] = 1.0
+            self.zapisz_kursy_do_pliku(kursy_słownik)  
+            return kursy_słownik
+        except (requests.exceptions.RequestException, AttributeError):
+            print("Brak połączenia z internetem. Wczytuję ostatnie kursy...")
+            try:
+                with open("kursy_walut.pkl", "rb") as plik:
+                    kursy_słownik = pickle.load(plik)  
+                    return kursy_słownik
+            except (FileNotFoundError, AttributeError):
+                print("Brak danych o kursach. Uruchom program z połączeniem internetowym.")
+                return None 
+
+    def zapisz_kursy_do_pliku(self, kursy_słownik):
+        with open("kursy_walut.pkl", "wb") as plik:
+            pickle.dump(kursy_słownik, plik)  # Zapisanie tabeli kursów do pliku
+
+    def oblicz(self):
+        try:
+            waluta_zrodlowa = self.waluta_zrodlowa.get()
+            waluta_docelowa = self.waluta_docelowa.get()
+            kwota = self.kwota.get()
+            wynik = kwota * self.kursy[waluta_zrodlowa] / self.kursy[waluta_docelowa]
+            if wynik<0:
+                self.wynik.set("Błąd: Kwota jest ujemna")
+            else:
+                self.wynik.set(f"{wynik:.2f} {waluta_docelowa}")
+        except KeyError:
+            self.wynik.set("Błąd: Nieznana waluta!")
+
+    def utworz_interfejs(self):
+        etykieta_waluta_zrodlowa = ttk.Label(self.root, text="Waluta źródłowa:")
+        etykieta_waluta_zrodlowa.grid(row=0, column=0, padx=10, pady=10)
+
+        etykieta_waluta_docelowa = ttk.Label(self.root, text="Waluta docelowa:")
+        etykieta_waluta_docelowa.grid(row=0, column=2, padx=10, pady=10)
+
+        etykieta_kwota = ttk.Label(self.root, text="Kwota:")
+        etykieta_kwota.grid(row=2, column=0, padx=10, pady=10)
+
+        etykieta_wynik = ttk.Label(self.root, text="Wynik:")
+        etykieta_wynik.grid(row=2, column=2, padx=10, pady=10)
+
+        lista_waluta_zrodlowa = ttk.Combobox(self.root, textvariable=self.waluta_zrodlowa, values=list(self.kursy.keys()))
+        lista_waluta_zrodlowa.grid(row=0, column=1, padx=10, pady=10)
+        lista_waluta_zrodlowa.current(0)
+
+        lista_waluta_docelowa = ttk.Combobox(self.root, textvariable=self.waluta_docelowa, values=list(self.kursy.keys()))
+        lista_waluta_docelowa.grid(row=0, column=3, padx=10, pady=10)
+        lista_waluta_docelowa.current(1)
+
+        pole_kwota = ttk.Entry(self.root, textvariable=self.kwota)
+        pole_kwota.grid(row=2, column=1, padx=10, pady=10)
+
+        pole_wynik = ttk.Entry(self.root, textvariable=self.wynik, state='readonly')
+        pole_wynik.grid(row=2, column=3, padx=10, pady=10)
+       
+        przycisk_oblicz = ttk.Button(self.root, text="Oblicz", command=self.oblicz)
+        przycisk_oblicz.grid(row=4, column=0, padx=10, pady=10)
+
+        przycisk_zakoncz = ttk.Button(self.root, text="Zakończ", command=self.root.quit)
+        przycisk_zakoncz.grid(row=4, column=3, padx=10, pady=10)
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    konwerter = KalkulatorWalut(root)
+    root.mainloop()
