@@ -51,7 +51,7 @@ class KalkulatorWalut:
             if wynik<0:
                 self.wynik.set("Błąd: Kwota jest ujemna")
             else:
-                self.wynik.set(f"{wynik:.2f} {waluta_docelowa}")
+                self.wynik.set(f"{wynik:.4f} {waluta_docelowa}")
         except KeyError:
             self.wynik.set("Błąd: Nieznana waluta!")
 
@@ -68,11 +68,11 @@ class KalkulatorWalut:
         etykieta_wynik = ttk.Label(self.root, text="Wynik:")
         etykieta_wynik.grid(row=2, column=2, padx=10, pady=10)
 
-        lista_waluta_zrodlowa = ttk.Combobox(self.root, textvariable=self.waluta_zrodlowa, values=list(self.kursy.keys()))
+        lista_waluta_zrodlowa = ttk.Combobox(self.root, textvariable=self.waluta_zrodlowa, values=list(self.kursy.keys()),state="readonly")
         lista_waluta_zrodlowa.grid(row=0, column=1, padx=10, pady=10)
         lista_waluta_zrodlowa.current(0)
 
-        lista_waluta_docelowa = ttk.Combobox(self.root, textvariable=self.waluta_docelowa, values=list(self.kursy.keys()))
+        lista_waluta_docelowa = ttk.Combobox(self.root, textvariable=self.waluta_docelowa, values=list(self.kursy.keys()), state="readonly")
         lista_waluta_docelowa.grid(row=0, column=3, padx=10, pady=10)
         lista_waluta_docelowa.current(1)
 
