@@ -40,7 +40,7 @@ class KalkulatorWalut:
 
     def zapisz_kursy_do_pliku(self, kursy_słownik):
         with open("kursy_walut.pkl", "wb") as plik:
-            pickle.dump(kursy_słownik, plik)  # Zapisanie tabeli kursów do pliku
+            pickle.dump(kursy_słownik, plik)  
 
     def oblicz(self):
         try:
